@@ -16,15 +16,15 @@ def format_code_for_json(code):
     return code
 
 
-def save_to_jsonl(text, code, output_file):
+def save_to_jsonl(text, bp, code, output_file):
     # Rimuove i caratteri '#' dal testo
     text = text.replace("#", "")
-
     # Rimuove i ritorni a capo dal testo
     text = text.replace("\n", " ")
+    bp = bp.replace("\n", " ")
 
-    # Crea un dizionario con i campi "text" e "code"
-    json_content = {"text": text, "code": code}
+    # Crea un dizionario con i campi "text", "bp" e "code"
+    json_content = {"text": text, "BP": bp, "code": code}
 
     # Scrive il contenuto JSONL nel file di output
     with open(output_file, 'a') as file:
@@ -41,6 +41,7 @@ def main_interactive():
 
     if choice == "1":
         text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
+        bp = get_multiline_input("Inserisci Best Practices (termina con 'EOF' su una nuova riga):")
         code = get_multiline_input("Inserisci il codice Python:")
         #output_file = input(
         #    "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
@@ -51,6 +52,7 @@ def main_interactive():
            # "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
         output_file = '/SecureCatalogue.jsonl'
         text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
+        bp = get_multiline_input("Inserisci Best Practices (termina con 'EOF' su una nuova riga):")
         code = read_code_from_file(file_path)
     else:
         print("Scelta non valida.")
@@ -59,7 +61,7 @@ def main_interactive():
     formatted_code = format_code_for_json(code)
 
     # Salva nel formato JSONL
-    save_to_jsonl(text, formatted_code, output_file)
+    save_to_jsonl(text, bp, formatted_code, output_file)
     print(f"Dati salvati in formato JSONL nel file '{output_file}'")
 
 
