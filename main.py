@@ -44,7 +44,7 @@ def main_interactive():
         code = get_multiline_input("Inserisci il codice Python:")
         #output_file = input(
         #    "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
-        output_file = '/SecureCatalogue.jsonl'   
+        output_file = './SecureCatalogue.jsonl'   
     elif choice == "2":
         file_path = input("Inserisci il percorso del file contenente il codice: ").strip()
         #output_file = input(
