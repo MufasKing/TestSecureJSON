@@ -43,7 +43,7 @@ def main_interactive():
         text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
         bp = get_multiline_input("Inserisci Best Practices (termina con 'EOF' su una nuova riga):")
         code = get_multiline_input("Inserisci il codice Python:")
-        cwe = bp = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
+        cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
         #output_file = input(
         #    "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
         output_file = './SecureCatalogue.jsonl'   
