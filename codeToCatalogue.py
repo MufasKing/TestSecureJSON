@@ -77,7 +77,7 @@ def main_interactive():
         bp = get_comma_separated_input("Inserisci le Best Practices separate da virgola:")
 
         code = read_code_from_file(file_path)
-        cwe = bp = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
+        cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
     else:
         print("Scelta non valida.")
         return
