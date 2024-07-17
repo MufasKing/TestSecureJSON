@@ -16,27 +16,12 @@ def format_code_for_json(code):
     return code
 
 
-#def save_to_jsonl(text, bp, code, cwe, output_file):
-    # Rimuove i caratteri '#' dal testo
-    text = text.replace("#", "")
-    # Rimuove i ritorni a capo dal testo
-    text = text.replace("\n", " ")
-    bp = bp.replace("\n", " ")
-
-    # Crea un dizionario con i campi "text", "bp" e "code"
-    json_content = {"text": text, "BP": bp, "code": code, "CWE": cwe}
-
-    # Scrive il contenuto JSONL nel file di output
-    with open(output_file, 'a') as file:
-        file.write(json.dumps(json_content) + "\n")
-
 def save_to_jsonl(text, bp, code, cwe, output_file):
     # Rimuove i caratteri '#' dal testo
     text = text.replace("#", "")
     # Rimuove i ritorni a capo dal testo
     text = text.replace("\n", " ")
     # Rimuove i ritorni a capo da ogni Best Practice
-    #bp = [b.replace("\n", " ") for b in bp]
     bp = [b.strip() for b in bp]
 
     # Crea un dizionario con i campi "text", "bp" e "code"
@@ -46,6 +31,7 @@ def save_to_jsonl(text, bp, code, cwe, output_file):
     with open(output_file, 'a') as file:
         file.write(json.dumps(json_content) + "\n")
 
+
 def main_interactive():
     # Modalità interattiva
     print("Modalità interattiva:")
@@ -54,66 +40,70 @@ def main_interactive():
 
     choice = input("Seleziona un'opzione (1 o 2): ").strip()
 
-    if choice == "1":
-        text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
-        #bp = get_multiline_input("Inserisci Best Practices (termina con 'EOF' su una nuova riga):")
-        #bp = get_multiline_input_list("Inserisci Best Practices (termina ogni Best Practice con 'EOF' su una nuova riga):")
-        
-        bp = get_comma_separated_input("Inserisci le Best Practices separate da virgola:")
+    try:
+        if choice == "1":
+            text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
+            bp = get_comma_separated_input("Inserisci le Best Practices separate da virgola:")
+            cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
+            output_file = './SecureCatalogue1.jsonl'
 
-        code = get_multiline_input("Inserisci il codice Python:")
-        cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
-        #output_file = input(
-        #    "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
-        output_file = './SecureCatalogue1.jsonl'   
-    elif choice == "2":
-        file_path = input("Inserisci il percorso del file contenente il codice: ").strip()
-        #output_file = input(
-           # "Inserisci il nome del file di output (default: formatted_code.jsonl): ").strip() or "formatted_code.jsonl"
-        output_file = '/SecureCatalogue1.jsonl'
-        text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
-        #bp = get_multiline_input("Inserisci Best Practices (termina con 'EOF' su una nuova riga):")
-        
-        bp = get_comma_separated_input("Inserisci le Best Practices separate da virgola:")
+            codes = []
+            for _ in range(3):
+                code = get_multiline_input("Inserisci il codice Python:")
+                formatted_code = format_code_for_json(code)
+                codes.append(formatted_code)
 
-        code = read_code_from_file(file_path)
-        cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
-    else:
-        print("Scelta non valida.")
-        return
+        elif choice == "2":
+            file_path = input("Inserisci il percorso del file contenente il codice: ").strip()
+            output_file = './SecureCatalogue1.jsonl'
+            text = get_multiline_input("Inserisci il testo normale (termina con 'EOF' su una nuova riga):")
+            bp = get_comma_separated_input("Inserisci le Best Practices separate da virgola:")
+            cwe = get_multiline_input("Inserisci CWE (termina con 'EOF' su una nuova riga):")
 
-    formatted_code = format_code_for_json(code)
+            codes = []
+            for _ in range(3):
+                code = read_code_from_file(file_path)
+                formatted_code = format_code_for_json(code)
+                codes.append(formatted_code)
+        else:
+            print("Scelta non valida.")
+            return
 
-    # Salva nel formato JSONL
-    save_to_jsonl(text, bp, formatted_code, cwe, output_file)
-    print(f"Dati salvati in formato JSONL nel file '{output_file}'")
+        # Salva nel formato JSONL solo se tutte le informazioni sono state raccolte
+        for code in codes:
+            save_to_jsonl(text, bp, code, cwe, output_file)
+        print(f"Dati salvati in formato JSONL nel file '{output_file}'")
+
+    except KeyboardInterrupt:
+        print("\nInterruzione da tastiera rilevata. Non è stato salvato nulla.")
+    except Exception as e:
+        print(f"Errore: {e}. Non è stato salvato nulla.")
 
 
 def get_multiline_input(prompt):
     print(prompt)
     lines = []
     while True:
-        line = input()
-        if line == "EOF":
-            break
-        lines.append(line)
+        try:
+            line = input()
+            if line == "EOF":
+                break
+            lines.append(line)
+        except KeyboardInterrupt:
+            print("\nInterruzione da tastiera rilevata.")
+            raise
     return "\n".join(lines)
 
-#def get_multiline_input_list(prompt):
-    print(prompt)
-    print("Inserisci ogni Best Practice e termina con 'EOF' su una nuova riga per finire.")
-    lines = []
-    while True:
-        line = input()
-        if line == "EOF":
-            break
-        lines.append(line)
-    return lines
 
 def get_comma_separated_input(prompt):
     print(prompt)
-    line = input()
-    return [bp.strip() for bp in line.split(",")]
+    try:
+        line = input()
+        return [bp.strip() for bp in line.split(",")]
+    except KeyboardInterrupt:
+        print("\nInterruzione da tastiera rilevata.")
+        raise
+
 
 if __name__ == "__main__":
     main_interactive()

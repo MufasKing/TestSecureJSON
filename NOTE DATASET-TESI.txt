@@ -3,8 +3,7 @@ Seconda riga ChatGPT(4o o 3.5)
 Terza riga GitHub Copilot
 
 TERMINATA CARTELLA CWE-434
-TERMINATA CARTELLA CWE-476 (DUBBIO: python utilizza il garbage collector e le classi, per far vedere l'implementazione sicura di allocazione, deallocazione della memoria e gestione dei puntatori devo usare ctypes, lascio esempi con ctypes o senza? Per ora metto ad ognuno di importare ctypes).
-
+TERMINATA CARTELLA CWE-476
 TERMINATA CARTELLA CWE-502(9 RIGHE) 
 
 TERMINATO DATASET DI PARTENZA
@@ -12,4 +11,4 @@ CARTELLE:
 FATTE FINO A CWE-79
 INIZIARE CARTELLA NIENTE FINITOOOOOOOOOOO
 
-Per velocizzare utilizzare codeToCatalogueFinal
+Per velocizzare utilizzare codeToCatalogue
